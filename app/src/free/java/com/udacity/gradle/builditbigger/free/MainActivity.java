@@ -1,25 +1,20 @@
 package com.udacity.gradle.builditbigger.free;
 
-import android.content.Context;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.beshoy.androidlib.JokeTeller;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.udacity.gradle.builditbigger.R;
-import com.udacity.gradle.builditbigger.classes.AsyncTaskResponse;
 import com.udacity.gradle.builditbigger.classes.JokesEndpointAsyncTask;
 
-public class MainActivity extends AppCompatActivity implements AsyncTaskResponse {
+public class MainActivity extends AppCompatActivity {
 
     AdView mAdView;
     JokesEndpointAsyncTask jokesAsyncTask;
@@ -33,7 +28,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskResponse
         tellJoke_button = (Button) findViewById(R.id.tellJoke_button);
 
         jokesAsyncTask = new JokesEndpointAsyncTask(this);
-        jokesAsyncTask.taskResponse = this;
 
         mAdView = (AdView) findViewById(R.id.adView);
         mInterstitialAd = new InterstitialAd(this);
@@ -56,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskResponse
         tellJoke_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                jokesAsyncTask = null;
                 if (mInterstitialAd.isLoaded()) {
                     mInterstitialAd.show();
                 } else {
@@ -101,17 +96,8 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskResponse
     public void tellJoke() {
         if(jokesAsyncTask == null){
             jokesAsyncTask = new JokesEndpointAsyncTask(this);
-            jokesAsyncTask.taskResponse = this;
         }
-        jokesAsyncTask.execute("here is a free joke =D");
+        jokesAsyncTask.execute();
     }
 
-
-    @Override
-    public void jokeAsyncTaskResponse(String joke) {
-        Intent intent = new Intent(this, JokeTeller.class);
-        intent.putExtra("joke",joke);
-        startActivity(intent);
-        jokesAsyncTask = null;
-    }
 }

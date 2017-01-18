@@ -14,7 +14,7 @@ import com.udacity.gradle.builditbigger.R;
 import com.udacity.gradle.builditbigger.classes.AsyncTaskResponse;
 import com.udacity.gradle.builditbigger.classes.JokesEndpointAsyncTask;
 
-public class MainActivity extends AppCompatActivity implements AsyncTaskResponse{
+public class MainActivity extends AppCompatActivity{
 
     JokesEndpointAsyncTask jokesAsyncTask;
 
@@ -22,8 +22,6 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskResponse
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        jokesAsyncTask = new JokesEndpointAsyncTask(this);
-        jokesAsyncTask.taskResponse = this;
     }
 
     @Override
@@ -48,19 +46,9 @@ public class MainActivity extends AppCompatActivity implements AsyncTaskResponse
     }
 
     public void tellJoke(View view) {
-        if(jokesAsyncTask == null){
-            jokesAsyncTask = new JokesEndpointAsyncTask(this);
-            jokesAsyncTask.taskResponse = this;
-        }
-        jokesAsyncTask.execute("here is a paid joke $_$");
-    }
-
-
-    @Override
-    public void jokeAsyncTaskResponse(String joke) {
-        Intent intent = new Intent(this, JokeTeller.class);
-        intent.putExtra("joke",joke);
-        startActivity(intent);
         jokesAsyncTask = null;
+        jokesAsyncTask = new JokesEndpointAsyncTask(this);
+        jokesAsyncTask.execute();
     }
+
 }

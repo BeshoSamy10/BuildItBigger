@@ -3,9 +3,11 @@ package com.udacity.gradle.builditbigger.classes;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Pair;
 
+import com.example.beshoy.androidlib.JokeTeller;
 import com.example.bisho.myapplication.backend.myApi.MyApi;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
@@ -16,16 +18,17 @@ import java.io.IOException;
  * Created by bisho on 15-Jan-17.
  */
 
-public class JokesEndpointAsyncTask extends AsyncTask<String,Void,String> {
+public class JokesEndpointAsyncTask extends AsyncTask<Void,Void,String> {
 
     private static MyApi myApiService = null;
     private Context context;
-    public AsyncTaskResponse taskResponse = null;
-    ProgressDialog progressDialog = null;
+    private AsyncTaskResponse taskResponse = null;
+    private ProgressDialog progressDialog = null;
 
-    public JokesEndpointAsyncTask(Activity activity){
-        if(activity != null)
-            progressDialog = new ProgressDialog(activity);
+    public JokesEndpointAsyncTask(Context context){
+        this.context = context;
+        if(context != null)
+            progressDialog = new ProgressDialog(context);
     }
 
 
@@ -39,9 +42,8 @@ public class JokesEndpointAsyncTask extends AsyncTask<String,Void,String> {
     }
 
     @Override
-    protected  String doInBackground(String... strings) {
+    protected  String doInBackground(Void... voids) {
 
-        String joke = strings[0];
         if(myApiService == null) {  // Only do this once
             MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)
@@ -51,7 +53,7 @@ public class JokesEndpointAsyncTask extends AsyncTask<String,Void,String> {
         }
 
         try {
-            return myApiService.getJoke(joke).execute().getJoke();
+            return myApiService.getJoke().execute().getJoke();
         } catch (IOException e) {
             return e.getMessage();
         }
@@ -59,9 +61,16 @@ public class JokesEndpointAsyncTask extends AsyncTask<String,Void,String> {
 
     @Override
     protected void onPostExecute(String result) {
-        taskResponse.jokeAsyncTaskResponse(result);
+        if(taskResponse != null)
+            taskResponse.jokeAsyncTaskResponse(result);
+        else {
+            Intent intent = new Intent(context, JokeTeller.class);
+            intent.putExtra("joke",result);
+            context.startActivity(intent);
+        }
         if(progressDialog != null)
             progressDialog.dismiss();
+
     }
 
 }

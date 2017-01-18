@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"ODRTh3xaRR64wpeXJSlF33HMN-0/rV3doBQOiYyhjIzVOKYt1bu9lnw\"",
+ "etag": "\"ODRTh3xaRR64wpeXJSlF33HMN-0/sI5l2CkKmNh73Euj1EpRb714ytg\"",
  "discoveryVersion": "v1",
  "id": "myApi:v1",
  "name": "myApi",
@@ -95,18 +95,8 @@
  "methods": {
   "getJoke": {
    "id": "myApi.getJoke",
-   "path": "jokes/{joke}",
+   "path": "jokes",
    "httpMethod": "GET",
-   "parameters": {
-    "joke": {
-     "type": "string",
-     "required": true,
-     "location": "path"
-    }
-   },
-   "parameterOrder": [
-    "joke"
-   ],
    "response": {
     "$ref": "Jokes"
    },
